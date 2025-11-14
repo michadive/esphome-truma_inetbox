@@ -24,12 +24,11 @@ void LinBusListener::setup_framework() {
 
   auto uart_num = uartComp->get_hw_serial_number();
   auto hw_serial = uartComp->get_hw_serial();
-
   // Extract from `uartSetFastReading` - Can't call it because I don't have access to `uart_t` object.
 
   // Tweak the fifo settings so data is available as soon as the first byte is recieved.
   // If not it will wait either until fifo is filled or a certain time has passed.
-  uart_intr_config_t uart_intr;
+  uart_intr_config((uart_port_t)uart_num, &uart_intr);
   uart_intr.intr_enable_mask =
       UART_RXFIFO_FULL_INT_ENA_M | UART_RXFIFO_TOUT_INT_ENA_M;  // only these IRQs - no BREAK, PARITY or OVERFLOW
   // UART_RXFIFO_FULL_INT_ENA_M | UART_RXFIFO_TOUT_INT_ENA_M | UART_FRM_ERR_INT_ENA_M |
